@@ -19,4 +19,4 @@ jobs:
 
       - name: SSH ke server
         run: |
-          ssh -o StrictHostKeyChecking=no root@ssh.nixie.my.id "echo CONNECTED"
+          ssh root@ssh.nixie.my.id "echo CONNECTED"
