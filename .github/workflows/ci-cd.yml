@@ -16,7 +16,12 @@ jobs:
       - name: Connect Tailscale
         run: |
           sudo tailscale up --authkey ${{ secrets.TS_AUTHKEY }}
-
+          
+      - name: Debug
+        run: |
+          tailscale status
+          ip a
+          
       - name: SSH ke server
         run: |
-          ssh root@ssh.nixie.my.id "echo CONNECTED"
+          ssh -o StrictHostKeyChecking=no root@100.82.102.19 "echo CONNECTED"
