@@ -17,3 +17,11 @@ jobs:
       - name: Run remote command via SSH tunnel
         run: |
           cloudflared access ssh --hostname ssh.nixie.my.id --command "uptime"
+      - name: Check runner user
+        run: |
+          whoami
+          id
+      - name: cek direketori
+        run: |
+          cd /home/nixie/
+          ls -a
