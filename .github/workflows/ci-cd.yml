@@ -1,4 +1,4 @@
-name: Deploy via SSH Cloudflare Tunnel
+name: Deploy via Cloudflare SSH Tunnel
 
 on:
   push:
@@ -9,21 +9,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client wget
+
       - name: Install cloudflared
         run: |
           wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
           sudo dpkg -i cloudflared-linux-amd64.deb
 
-      - name: Run command on server
+      - name: Setup SSH config (Cloudflare Tunnel)
         run: |
-          cloudflared access ssh \
-            --hostname ssh.nixie.my.id \
-            --command "cd /home/nixie && pwd"
-      - name: Check runner user
+          mkdir -p ~/.ssh
+
+          cat <<EOF > ~/.ssh/config
+          Host nixie
+            HostName ssh.nixie.my.id
+            User root
+            ProxyCommand cloudflared access tcp --hostname %h
+          EOF
+
+          chmod 600 ~/.ssh/config
+
+      - name: Test connection
         run: |
-          whoami
-          id
-      - name: cek direketori
+          ssh -o StrictHostKeyChecking=no nixie "whoami && hostname"
+
+      - name: Deploy application
         run: |
-          cd /home/nixie/
-          ls -a
+          ssh nixie "
+            set -e
+
+            echo '== DEPLOY START =='
+
+            cd /home/nixie || exit 1
+
+            echo '== DEPLOY DONE =='
+          "
