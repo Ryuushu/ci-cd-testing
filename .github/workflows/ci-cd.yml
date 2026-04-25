@@ -9,61 +9,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # =========================
-      # 1. Install dependency
-      # =========================
-      - name: Install tools
+      - name: Install Tailscale
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client wget
+          curl -fsSL https://tailscale.com/install.sh | sh
 
-      # =========================
-      # 2. Install cloudflared
-      # =========================
-      - name: Install cloudflared
+      - name: Connect Tailscale
         run: |
-          wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-          sudo dpkg -i cloudflared-linux-amd64.deb
+          sudo tailscale up --authkey ${{ secrets.TS_AUTHKEY }}
 
-      # =========================
-      # 3. Setup SSH config (IMPORTANT)
-      # =========================
-      - name: Setup SSH config
+      - name: SSH ke server
         run: |
-          mkdir -p ~/.ssh
-
-          cat <<EOF > ~/.ssh/config
-          Host nixie
-            HostName ssh.nixie.my.id
-            User root
-            ProxyCommand cloudflared access tcp --hostname %h
-          EOF
-
-          chmod 600 ~/.ssh/config
-
-      # =========================
-      # 4. Test connection
-      # =========================
-      - name: Test SSH connection
-        run: |
-          ssh -o StrictHostKeyChecking=no nixie "whoami && hostname"
-
-      # =========================
-      # 5. Deploy step (CUSTOMIZE HERE)
-      # =========================
-      - name: Deploy application
-        run: |
-          ssh nixie "
-            set -e
-
-            echo '===== DEPLOY START ====='
-
-            cd /home/nixie || exit 1
-
-            git pull origin main
-
-            docker compose down || true
-            docker compose up -d --build
-
-            echo '===== DEPLOY DONE ====='
-          "
+          ssh -o StrictHostKeyChecking=no user@ssh.nixie.my.id "echo CONNECTED"
