@@ -24,4 +24,4 @@ jobs:
           
       - name: SSH ke server
         run: |
-          ssh -o StrictHostKeyChecking=no root@100.82.102.19 "echo CONNECTED"
+          tailscale ssh root@100.82.102.19 "echo CONNECTED"
