@@ -24,4 +24,4 @@ jobs:
           
       - name: SSH ke server
         run: |
-          tailscale ssh root@100.82.102.19 "echo CONNECTED"
+          tailscale ssh -vvv root@100.82.102.19 "echo CONNECTED"
