@@ -18,4 +18,4 @@ jobs:
           sudo netbird up --setup-key ${{ secrets.NETBIRD_KEY }}
       - name: SSH Deploy
         run: |
-          ssh root@debian-production.netbird.cloud "ls"
+          ssh root@100.84.54.5 "ls"
