@@ -16,6 +16,9 @@ jobs:
         run: |
           curl -fsSL https://pkgs.netbird.io/install.sh | sudo bash
           sudo netbird up --setup-key ${{ secrets.NETBIRD_KEY }}
+      - name: ping
+        run: |
+          ping 100.84.54.5
       - name: SSH Deploy
         run: |
-          ssh root@100.84.54.5 "ls"
+          ssh root@100.84.54.5
