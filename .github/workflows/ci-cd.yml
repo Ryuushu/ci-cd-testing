@@ -1,27 +1,21 @@
-name: Deploy via Cloudflare Tunnel SSH
+name: Deploy via NetBird
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted   # penting jika runner di NetBird
 
     steps:
-      - name: Install Tailscale
-        run: |
-          curl -fsSL https://tailscale.com/install.sh | sh
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Connect Tailscale
+      - name: Install NetBird
         run: |
-          sudo tailscale up --authkey ${{ secrets.TS_AUTHKEY }}
-          
-      - name: Debug
+          curl -fsSL https://pkgs.netbird.io/install.sh | sudo bash
+          sudo netbird up --setup-key ${{ secrets.NETBIRD_KEY }}
+      - name: SSH Deploy
         run: |
-          tailscale status
-          ip a
-          
-      - name: SSH ke server
-        run: |
-          ssh -vvv root@100.82.102.19
+          ssh root@debian-production.netbird.cloud "ls"
