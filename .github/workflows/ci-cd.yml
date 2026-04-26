@@ -27,4 +27,4 @@ jobs:
           ssh-keyscan -H 100.84.54.5 >> ~/.ssh/known_hosts
       - name: SSH Deploy
         run: |
-          ssh root@100.84.54.5
+          ssh root@100.84.54.5 "ls"
