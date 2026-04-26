@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted   # penting jika runner di NetBird
+    runs-on: ubuntu-latest  # penting jika runner di NetBird
 
     steps:
       - name: Checkout code
